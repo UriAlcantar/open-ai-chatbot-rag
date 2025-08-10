@@ -1,0 +1,21 @@
+Documento de Prueba - Subida Manual
+
+Este es un documento de prueba que se subirá manualmente al bucket S3.
+
+Información de la Empresa:
+- Nombre: TechCorp Solutions
+- Fundada: 2020
+- Especialidad: Desarrollo de software y consultoría tecnológica
+
+Servicios Ofrecidos:
+1. Desarrollo de aplicaciones web
+2. Consultoría en transformación digital
+3. Mantenimiento de sistemas legacy
+4. Capacitación en tecnologías modernas
+
+Contacto:
+- Email: info@techcorp.com
+- Teléfono: +1-555-0123
+- Dirección: 123 Tech Street, Silicon Valley, CA
+
+Este documento será leído automáticamente por el sistema RAG sin necesidad de modificar código.

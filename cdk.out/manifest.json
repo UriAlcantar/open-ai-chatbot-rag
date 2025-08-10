@@ -1,0 +1,227 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "AiWebStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "AiWebStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "AiWebStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://677276086250/us-east-2",
+      "properties": {
+        "templateFile": "AiWebStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::677276086250:role/cdk-hnb659fds-deploy-role-677276086250-us-east-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::677276086250:role/cdk-hnb659fds-cfn-exec-role-677276086250-us-east-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-677276086250-us-east-2/76688af0c928b1d10a48d13f77264a1f3bf9506941cc37f121fb98965799fa21.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "AiWebStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::677276086250:role/cdk-hnb659fds-lookup-role-677276086250-us-east-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "AiWebStack.assets"
+      ],
+      "metadata": {
+        "/AiWebStack/DocumentsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucket9EC9DEB9"
+          }
+        ],
+        "/AiWebStack/DocumentsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketPolicy1F991BD4"
+          }
+        ],
+        "/AiWebStack/DocumentsBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketAutoDeleteObjectsCustomResourceFE3123FC"
+          }
+        ],
+        "/AiWebStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/AiWebStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/AiWebStack/ChatHandler/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ChatHandlerServiceRole801A14FE"
+          }
+        ],
+        "/AiWebStack/ChatHandler/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ChatHandlerServiceRoleDefaultPolicy7E79112C"
+          }
+        ],
+        "/AiWebStack/ChatHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ChatHandler6667856F"
+          }
+        ],
+        "/AiWebStack/HttpApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiF5A9A8A7"
+          }
+        ],
+        "/AiWebStack/HttpApi/DefaultStage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiDefaultStage3EEB07D6"
+          }
+        ],
+        "/AiWebStack/HttpApi/POST--chat/ChatIntegration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiPOSTchatChatIntegration1126096F"
+          }
+        ],
+        "/AiWebStack/HttpApi/POST--chat/ChatIntegration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiPOSTchatChatIntegrationPermission94971A1A"
+          }
+        ],
+        "/AiWebStack/HttpApi/POST--chat/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiPOSTchat1EBFAE30"
+          }
+        ],
+        "/AiWebStack/SiteBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SiteBucket397A1860"
+          }
+        ],
+        "/AiWebStack/SiteBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SiteBucketPolicy3AC1D0F8"
+          }
+        ],
+        "/AiWebStack/SiteBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SiteBucketAutoDeleteObjectsCustomResource9585E968"
+          }
+        ],
+        "/AiWebStack/SiteDistribution/Origin1/S3Origin/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SiteDistributionOrigin1S3Origin8B65D95B"
+          }
+        ],
+        "/AiWebStack/SiteDistribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SiteDistribution3FF9535D"
+          }
+        ],
+        "/AiWebStack/DeployWebsite/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployWebsiteAwsCliLayer17DBC421"
+          }
+        ],
+        "/AiWebStack/DeployWebsite/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployWebsiteCustomResourceD116527B"
+          }
+        ],
+        "/AiWebStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/AiWebStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/AiWebStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/AiWebStack/ApiBaseUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiBaseUrl"
+          }
+        ],
+        "/AiWebStack/CloudFrontUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudFrontUrl"
+          }
+        ],
+        "/AiWebStack/OpenAISecretName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OpenAISecretName"
+          }
+        ],
+        "/AiWebStack/DocumentsBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketName"
+          }
+        ],
+        "/AiWebStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/AiWebStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/AiWebStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "AiWebStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

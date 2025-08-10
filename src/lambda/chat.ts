@@ -22,15 +22,13 @@ async function getOpenAIKey(): Promise<string> {
   }
 }
 
-let openaiClient: OpenAI | null = null;
-
 async function getOpenAIClient(): Promise<OpenAI> {
-  if (!openaiClient) {
-    const apiKey = await getOpenAIKey();
-    openaiClient = new OpenAI({ apiKey });
-  }
+  const apiKey = await getOpenAIKey();
+  openaiClient = new OpenAI({ apiKey });
   return openaiClient;
 }
+
+let openaiClient: OpenAI;
 
 async function createEmbedding(text: string, openai: OpenAI): Promise<number[]> {
   const response = await openai.embeddings.create({
@@ -41,6 +39,76 @@ async function createEmbedding(text: string, openai: OpenAI): Promise<number[]> 
 }
 
 async function searchSimilarDocuments(query: string, openai: OpenAI, limit: number = 5): Promise<string[]> {
+  try {
+    const opensearchEndpoint = process.env.OPENSEARCH_ENDPOINT;
+    const opensearchIndex = process.env.OPENSEARCH_INDEX || 'documents';
+    
+    if (!opensearchEndpoint) {
+      console.error('OPENSEARCH_ENDPOINT environment variable not set');
+      return [];
+    }
+
+    // Crear embedding de la consulta
+    const queryEmbedding = await createEmbedding(query, openai);
+    
+    // Construir la URL de búsqueda de OpenSearch
+    const searchUrl = `https://${opensearchEndpoint}/${opensearchIndex}/_search`;
+    
+    // Query de búsqueda vectorial
+    const searchBody = {
+      size: limit,
+      query: {
+        script_score: {
+          query: { match_all: {} },
+          script: {
+            source: "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
+            params: { query_vector: queryEmbedding }
+          }
+        }
+      },
+      _source: ["content", "source", "chunk_index"]
+    };
+
+    // Realizar búsqueda en OpenSearch
+    const response = await fetch(searchUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(searchBody),
+    });
+
+    if (!response.ok) {
+      console.error('OpenSearch search failed:', response.status, response.statusText);
+      // Fallback a búsqueda simple en S3
+      return await fallbackSearch(query, limit);
+    }
+
+    const searchResult = await response.json() as any;
+    const hits = searchResult.hits?.hits || [];
+    
+    if (hits.length === 0) {
+      console.log('No vector search results found, trying fallback...');
+      return await fallbackSearch(query, limit);
+    }
+
+    // Extraer contenido de los documentos encontrados
+    const relevantDocuments = hits.map((hit: any) => {
+      const source = hit._source;
+      return `[${source.source} - Chunk ${source.chunk_index}]\n${source.content}`;
+    });
+
+    console.log(`Found ${relevantDocuments.length} relevant documents via vector search`);
+    return relevantDocuments;
+
+  } catch (error) {
+    console.error('Error in vector search:', error);
+    // Fallback a búsqueda simple
+    return await fallbackSearch(query, limit);
+  }
+}
+
+async function fallbackSearch(query: string, limit: number = 5): Promise<string[]> {
   try {
     const bucketName = process.env.DOCUMENTS_BUCKET;
     if (!bucketName) {
@@ -91,9 +159,10 @@ async function searchSimilarDocuments(query: string, openai: OpenAI, limit: numb
       return queryWords.some(word => contentLower.includes(word));
     });
 
+    console.log(`Found ${relevantDocuments.length} relevant documents via fallback search`);
     return relevantDocuments.slice(0, limit);
   } catch (error) {
-    console.error('Error searching documents:', error);
+    console.error('Error in fallback search:', error);
     return [];
   }
 }

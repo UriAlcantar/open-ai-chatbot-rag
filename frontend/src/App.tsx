@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import FileUpload from './components/FileUpload'
 
 const API = import.meta.env.VITE_API_URL
 
@@ -8,6 +9,7 @@ export default function App() {
   const [msgs, setMsgs] = useState<Msg[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showUpload, setShowUpload] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -87,17 +89,41 @@ export default function App() {
               <p className="text-sm text-gray-400">Powered by OpenAI GPT-4</p>
             </div>
           </div>
-          <button
-            onClick={clearChat}
-            className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors duration-200"
-          >
-            Clear Chat
-          </button>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setShowUpload(!showUpload)}
+              className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200"
+            >
+              {showUpload ? '📝 Chat' : '📄 Upload'}
+            </button>
+            <button
+              onClick={clearChat}
+              className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors duration-200"
+            >
+              Clear Chat
+            </button>
+          </div>
         </div>
 
-        {/* Messages Container */}
-        <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-600">
-          {msgs.length === 0 && (
+        {/* Content Container */}
+        {showUpload ? (
+          <div className="flex-1 overflow-y-auto mb-4">
+            <FileUpload 
+              apiUrl={API} 
+              onUploadComplete={(result) => {
+                console.log('Upload completed:', result);
+                // Opcional: mostrar mensaje de éxito en el chat
+                setMsgs(prev => [...prev, { 
+                  role: 'assistant' as const, 
+                  content: `✅ Archivo "${result.fileName}" procesado exitosamente. ${result.chunksProcessed} chunks creados y disponibles para búsquedas semánticas.` 
+                }]);
+                setShowUpload(false);
+              }}
+            />
+          </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-600">
+            {msgs.length === 0 && (
             <div className="text-center py-12">
               <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,9 +190,11 @@ export default function App() {
           
           <div ref={messagesEndRef} />
         </div>
+        )}
 
-        {/* Input Container */}
-        <div className="p-4 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-600">
+        {/* Input Container - Solo mostrar en modo chat */}
+        {!showUpload && (
+          <div className="p-4 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-600">
           <div className="flex space-x-3">
             <div className="flex-1 relative">
               <textarea
@@ -191,6 +219,7 @@ export default function App() {
             </button>
           </div>
         </div>
+        )}
       </div>
     </div>
   )

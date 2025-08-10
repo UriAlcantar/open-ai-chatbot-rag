@@ -1,5 +1,467 @@
 {
  "Resources": {
+  "RAGVPCB5C21593": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/Resource"
+   }
+  },
+  "RAGVPCPublicSubnet1Subnet45F7C19A": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PublicSubnet1/Subnet"
+   }
+  },
+  "RAGVPCPublicSubnet1RouteTableA4838285": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PublicSubnet1/RouteTable"
+   }
+  },
+  "RAGVPCPublicSubnet1RouteTableAssociationDFD5559A": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "RAGVPCPublicSubnet1RouteTableA4838285"
+    },
+    "SubnetId": {
+     "Ref": "RAGVPCPublicSubnet1Subnet45F7C19A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "RAGVPCPublicSubnet1DefaultRoute0BFEC12E": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "RAGVPCIGW32511347"
+    },
+    "RouteTableId": {
+     "Ref": "RAGVPCPublicSubnet1RouteTableA4838285"
+    }
+   },
+   "DependsOn": [
+    "RAGVPCVPCGW806E27EC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "RAGVPCPublicSubnet1EIP65D7E8D8": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC/PublicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PublicSubnet1/EIP"
+   }
+  },
+  "RAGVPCPublicSubnet1NATGateway695A0D74": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "RAGVPCPublicSubnet1EIP65D7E8D8",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "RAGVPCPublicSubnet1Subnet45F7C19A"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC/PublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "RAGVPCPublicSubnet1DefaultRoute0BFEC12E",
+    "RAGVPCPublicSubnet1RouteTableAssociationDFD5559A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PublicSubnet1/NATGateway"
+   }
+  },
+  "RAGVPCPrivateSubnet1SubnetE18EC96A": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-2a",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PrivateSubnet1/Subnet"
+   }
+  },
+  "RAGVPCPrivateSubnet1RouteTableCE09D877": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PrivateSubnet1/RouteTable"
+   }
+  },
+  "RAGVPCPrivateSubnet1RouteTableAssociation2795986E": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "RAGVPCPrivateSubnet1RouteTableCE09D877"
+    },
+    "SubnetId": {
+     "Ref": "RAGVPCPrivateSubnet1SubnetE18EC96A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "RAGVPCPrivateSubnet1DefaultRoute6B5B1169": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "RAGVPCPublicSubnet1NATGateway695A0D74"
+    },
+    "RouteTableId": {
+     "Ref": "RAGVPCPrivateSubnet1RouteTableCE09D877"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "RAGVPCIGW32511347": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "AiWebStack/RAGVPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/IGW"
+   }
+  },
+  "RAGVPCVPCGW806E27EC": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "RAGVPCIGW32511347"
+    },
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGVPC/VPCGW"
+   }
+  },
+  "OpenSearchSecurityGroup5212DDD0": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for OpenSearch domain",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": {
+       "Fn::GetAtt": [
+        "RAGVPCB5C21593",
+        "CidrBlock"
+       ]
+      },
+      "Description": "Allow HTTPS from VPC",
+      "FromPort": 443,
+      "IpProtocol": "tcp",
+      "ToPort": 443
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/OpenSearchSecurityGroup/Resource"
+   }
+  },
+  "RAGDomain527EB988": {
+   "Type": "AWS::OpenSearchService::Domain",
+   "Properties": {
+    "ClusterConfig": {
+     "DedicatedMasterEnabled": false,
+     "InstanceCount": 1,
+     "InstanceType": "t3.small.search",
+     "ZoneAwarenessEnabled": false
+    },
+    "DomainEndpointOptions": {
+     "EnforceHTTPS": true,
+     "TLSSecurityPolicy": "Policy-Min-TLS-1-0-2019-07"
+    },
+    "EBSOptions": {
+     "EBSEnabled": true,
+     "VolumeSize": 10,
+     "VolumeType": "gp3"
+    },
+    "EncryptionAtRestOptions": {
+     "Enabled": false
+    },
+    "EngineVersion": "OpenSearch_2.11",
+    "LogPublishingOptions": {},
+    "NodeToNodeEncryptionOptions": {
+     "Enabled": false
+    },
+    "VPCOptions": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "OpenSearchSecurityGroup5212DDD0",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "RAGVPCPrivateSubnet1SubnetE18EC96A"
+      }
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGDomain/Resource"
+   }
+  },
+  "RAGDomainAccessPolicy0F9EC2FC": {
+   "Type": "Custom::OpenSearchAccessPolicy",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+      "Arn"
+     ]
+    },
+    "Create": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"action\":\"updateDomainConfig\",\"service\":\"OpenSearch\",\"parameters\":{\"DomainName\":\"",
+       {
+        "Ref": "RAGDomain527EB988"
+       },
+       "\",\"AccessPolicies\":\"{\\\"Statement\\\":[{\\\"Action\\\":\\\"es:*\\\",\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":{\\\"AWS\\\":\\\"*\\\"},\\\"Resource\\\":\\\"*\\\"}],\\\"Version\\\":\\\"2012-10-17\\\"}\"},\"outputPaths\":[\"DomainConfig.AccessPolicies\"],\"physicalResourceId\":{\"id\":\"",
+       {
+        "Ref": "RAGDomain527EB988"
+       },
+       "AccessPolicy\"}}"
+      ]
+     ]
+    },
+    "Update": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"action\":\"updateDomainConfig\",\"service\":\"OpenSearch\",\"parameters\":{\"DomainName\":\"",
+       {
+        "Ref": "RAGDomain527EB988"
+       },
+       "\",\"AccessPolicies\":\"{\\\"Statement\\\":[{\\\"Action\\\":\\\"es:*\\\",\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":{\\\"AWS\\\":\\\"*\\\"},\\\"Resource\\\":\\\"*\\\"}],\\\"Version\\\":\\\"2012-10-17\\\"}\"},\"outputPaths\":[\"DomainConfig.AccessPolicies\"],\"physicalResourceId\":{\"id\":\"",
+       {
+        "Ref": "RAGDomain527EB988"
+       },
+       "AccessPolicy\"}}"
+      ]
+     ]
+    },
+    "InstallLatestAwsSdk": false
+   },
+   "DependsOn": [
+    "RAGDomainAccessPolicyCustomResourcePolicy9E01FF89"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGDomain/AccessPolicy/Resource/Default"
+   }
+  },
+  "RAGDomainAccessPolicyCustomResourcePolicy9E01FF89": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "es:UpdateDomainConfig",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "RAGDomain527EB988",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "RAGDomainAccessPolicyCustomResourcePolicy9E01FF89",
+    "Roles": [
+     {
+      "Ref": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/RAGDomain/AccessPolicy/CustomResourcePolicy/Resource"
+   }
+  },
+  "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/AWS679f53fac002430cb0da5b7982bd2287/ServiceRole/Resource"
+   }
+  },
+  "AWS679f53fac002430cb0da5b7982bd22872D164C4C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-677276086250-us-east-2",
+     "S3Key": "97f30e67419a1676a2215492723e5add1aa491caf0cbe2dd878fc4fab0468cd4.zip"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 120
+   },
+   "DependsOn": [
+    "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/AWS679f53fac002430cb0da5b7982bd2287/Resource",
+    "aws:asset:path": "asset.97f30e67419a1676a2215492723e5add1aa491caf0cbe2dd878fc4fab0468cd4",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
   "DocumentsBucket9EC9DEB9": {
    "Type": "AWS::S3::Bucket",
    "Properties": {
@@ -136,6 +598,76 @@
     "aws:cdk:path": "AiWebStack/DocumentsBucket/AutoDeleteObjectsCustomResource/Default"
    }
   },
+  "DocumentsBucketNotifications871115F2": {
+   "Type": "Custom::S3BucketNotifications",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "DocumentsBucket9EC9DEB9"
+    },
+    "NotificationConfiguration": {
+     "LambdaFunctionConfigurations": [
+      {
+       "Events": [
+        "s3:ObjectCreated:*"
+       ],
+       "Filter": {
+        "Key": {
+         "FilterRules": [
+          {
+           "Name": "prefix",
+           "Value": "documents/"
+          }
+         ]
+        }
+       },
+       "LambdaFunctionArn": {
+        "Fn::GetAtt": [
+         "DocumentProcessor3D49A083",
+         "Arn"
+        ]
+       }
+      }
+     ]
+    },
+    "Managed": true
+   },
+   "DependsOn": [
+    "DocumentsBucketAllowBucketNotificationsToAiWebStackDocumentProcessorBEFF24685DDCEE58",
+    "DocumentsBucketPolicy1F991BD4"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/DocumentsBucket/Notifications/Resource"
+   }
+  },
+  "DocumentsBucketAllowBucketNotificationsToAiWebStackDocumentProcessorBEFF24685DDCEE58": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "DocumentProcessor3D49A083",
+      "Arn"
+     ]
+    },
+    "Principal": "s3.amazonaws.com",
+    "SourceAccount": "677276086250",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "DocumentsBucket9EC9DEB9",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/DocumentsBucket/AllowBucketNotificationsToAiWebStackDocumentProcessorBEFF2468"
+   }
+  },
   "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
    "Type": "AWS::IAM::Role",
    "Properties": {
@@ -200,6 +732,495 @@
     "aws:asset:property": "Code"
    }
   },
+  "DocumentProcessorServiceRole842FAC4B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/DocumentProcessor/ServiceRole/Resource"
+   }
+  },
+  "DocumentProcessorServiceRoleDefaultPolicyC0CEFF68": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":secretsmanager:us-east-2:677276086250:secret:openai-api-key-??????"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DocumentsBucket9EC9DEB9",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DocumentsBucket9EC9DEB9",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "es:ESHttpGet",
+        "es:ESHttpHead",
+        "es:ESHttpDelete",
+        "es:ESHttpPost",
+        "es:ESHttpPut",
+        "es:ESHttpPatch"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "RAGDomain527EB988",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RAGDomain527EB988",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DocumentProcessorServiceRoleDefaultPolicyC0CEFF68",
+    "Roles": [
+     {
+      "Ref": "DocumentProcessorServiceRole842FAC4B"
+     }
+    ]
+   },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/DocumentProcessor/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "DocumentProcessorSecurityGroupFF597A56": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatic security group for Lambda Function AiWebStackDocumentProcessorBEFF2468",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/DocumentProcessor/SecurityGroup/Resource"
+   }
+  },
+  "DocumentProcessor3D49A083": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-677276086250-us-east-2",
+     "S3Key": "f204f4c27ff2c4f24155cd1b4523b4884ae97f21e3a933976ac1bf7656e8723d.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "OPENAI_SECRET_NAME": "openai-api-key",
+      "OPENSEARCH_ENDPOINT": {
+       "Fn::GetAtt": [
+        "RAGDomain527EB988",
+        "DomainEndpoint"
+       ]
+      },
+      "OPENSEARCH_INDEX": "documents"
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 1024,
+    "Role": {
+     "Fn::GetAtt": [
+      "DocumentProcessorServiceRole842FAC4B",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 60,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "DocumentProcessorSecurityGroupFF597A56",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "RAGVPCPrivateSubnet1SubnetE18EC96A"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "DocumentProcessorServiceRoleDefaultPolicyC0CEFF68",
+    "DocumentProcessorServiceRole842FAC4B",
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/DocumentProcessor/Resource",
+    "aws:asset:path": "asset.f204f4c27ff2c4f24155cd1b4523b4884ae97f21e3a933976ac1bf7656e8723d",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "FileUploadServiceRole7F805DD3": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/FileUpload/ServiceRole/Resource"
+   }
+  },
+  "FileUploadServiceRoleDefaultPolicy78D9700B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":secretsmanager:us-east-2:677276086250:secret:openai-api-key-??????"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DocumentsBucket9EC9DEB9",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DocumentsBucket9EC9DEB9",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "es:ESHttpGet",
+        "es:ESHttpHead",
+        "es:ESHttpDelete",
+        "es:ESHttpPost",
+        "es:ESHttpPut",
+        "es:ESHttpPatch"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "RAGDomain527EB988",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RAGDomain527EB988",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "FileUploadServiceRoleDefaultPolicy78D9700B",
+    "Roles": [
+     {
+      "Ref": "FileUploadServiceRole7F805DD3"
+     }
+    ]
+   },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/FileUpload/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "FileUploadSecurityGroup885DE697": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatic security group for Lambda Function AiWebStackFileUploadC796E954",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/FileUpload/SecurityGroup/Resource"
+   }
+  },
+  "FileUpload8EAE93BA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-677276086250-us-east-2",
+     "S3Key": "c310ac646024663df432c99ec41e603b37b89745ff78491e707bc26940b1c6ea.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "OPENAI_SECRET_NAME": "openai-api-key",
+      "DOCUMENTS_BUCKET": {
+       "Ref": "DocumentsBucket9EC9DEB9"
+      },
+      "OPENSEARCH_ENDPOINT": {
+       "Fn::GetAtt": [
+        "RAGDomain527EB988",
+        "DomainEndpoint"
+       ]
+      },
+      "OPENSEARCH_INDEX": "documents"
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 1024,
+    "Role": {
+     "Fn::GetAtt": [
+      "FileUploadServiceRole7F805DD3",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 60,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "FileUploadSecurityGroup885DE697",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "RAGVPCPrivateSubnet1SubnetE18EC96A"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "FileUploadServiceRoleDefaultPolicy78D9700B",
+    "FileUploadServiceRole7F805DD3",
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/FileUpload/Resource",
+    "aws:asset:path": "asset.c310ac646024663df432c99ec41e603b37b89745ff78491e707bc26940b1c6ea",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
   "ChatHandlerServiceRole801A14FE": {
    "Type": "AWS::IAM::Role",
    "Properties": {
@@ -227,9 +1248,25 @@
         ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
        ]
       ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
      }
     ]
    },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
    "Metadata": {
     "aws:cdk:path": "AiWebStack/ChatHandler/ServiceRole/Resource"
    }
@@ -306,6 +1343,39 @@
          ]
         }
        ]
+      },
+      {
+       "Action": [
+        "es:ESHttpGet",
+        "es:ESHttpHead",
+        "es:ESHttpDelete",
+        "es:ESHttpPost",
+        "es:ESHttpPut",
+        "es:ESHttpPatch"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "RAGDomain527EB988",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RAGDomain527EB988",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
       }
      ],
      "Version": "2012-10-17"
@@ -317,8 +1387,35 @@
      }
     ]
    },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
    "Metadata": {
     "aws:cdk:path": "AiWebStack/ChatHandler/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ChatHandlerSecurityGroupCA7C1A3B": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatic security group for Lambda Function AiWebStackChatHandler971522B0",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "RAGVPCB5C21593"
+    }
+   },
+   "DependsOn": [
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/ChatHandler/SecurityGroup/Resource"
    }
   },
   "ChatHandler6667856F": {
@@ -326,14 +1423,21 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-677276086250-us-east-2",
-     "S3Key": "4dab87481113ee9494884e92bb0190042f224f4c93bf23c2f2062a5fba5aa776.zip"
+     "S3Key": "9cada9d6ce241decfe987088e46f37f1aaa312030a150fe442908b535c081a4d.zip"
     },
     "Environment": {
      "Variables": {
       "OPENAI_SECRET_NAME": "openai-api-key",
       "DOCUMENTS_BUCKET": {
        "Ref": "DocumentsBucket9EC9DEB9"
-      }
+      },
+      "OPENSEARCH_ENDPOINT": {
+       "Fn::GetAtt": [
+        "RAGDomain527EB988",
+        "DomainEndpoint"
+       ]
+      },
+      "OPENSEARCH_INDEX": "documents"
      }
     },
     "Handler": "index.handler",
@@ -345,17 +1449,117 @@
      ]
     },
     "Runtime": "nodejs20.x",
-    "Timeout": 30
+    "Timeout": 30,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "ChatHandlerSecurityGroupCA7C1A3B",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "RAGVPCPrivateSubnet1SubnetE18EC96A"
+      }
+     ]
+    }
    },
    "DependsOn": [
     "ChatHandlerServiceRoleDefaultPolicy7E79112C",
-    "ChatHandlerServiceRole801A14FE"
+    "ChatHandlerServiceRole801A14FE",
+    "RAGVPCPrivateSubnet1DefaultRoute6B5B1169",
+    "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
    ],
    "Metadata": {
     "aws:cdk:path": "AiWebStack/ChatHandler/Resource",
-    "aws:asset:path": "asset.4dab87481113ee9494884e92bb0190042f224f4c93bf23c2f2062a5fba5aa776",
+    "aws:asset:path": "asset.9cada9d6ce241decfe987088e46f37f1aaa312030a150fe442908b535c081a4d",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:PutBucketNotification",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "Roles": [
+     {
+      "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Description": "AWS CloudFormation handler for \"Custom::S3BucketNotifications\" resources (@aws-cdk/aws-s3)",
+    "Code": {
+     "ZipFile": "import boto3  # type: ignore\nimport json\nimport logging\nimport urllib.request\n\ns3 = boto3.client(\"s3\")\n\nEVENTBRIDGE_CONFIGURATION = 'EventBridgeConfiguration'\nCONFIGURATION_TYPES = [\"TopicConfigurations\", \"QueueConfigurations\", \"LambdaFunctionConfigurations\"]\n\ndef handler(event: dict, context):\n  response_status = \"SUCCESS\"\n  error_message = \"\"\n  try:\n    props = event[\"ResourceProperties\"]\n    notification_configuration = props[\"NotificationConfiguration\"]\n    managed = props.get('Managed', 'true').lower() == 'true'\n    stack_id = event['StackId']\n    old = event.get(\"OldResourceProperties\", {}).get(\"NotificationConfiguration\", {})\n    if managed:\n      config = handle_managed(event[\"RequestType\"], notification_configuration)\n    else:\n      config = handle_unmanaged(props[\"BucketName\"], stack_id, event[\"RequestType\"], notification_configuration, old)\n    s3.put_bucket_notification_configuration(Bucket=props[\"BucketName\"], NotificationConfiguration=config)\n  except Exception as e:\n    logging.exception(\"Failed to put bucket notification configuration\")\n    response_status = \"FAILED\"\n    error_message = f\"Error: {str(e)}. \"\n  finally:\n    submit_response(event, context, response_status, error_message)\n\ndef handle_managed(request_type, notification_configuration):\n  if request_type == 'Delete':\n    return {}\n  return notification_configuration\n\ndef handle_unmanaged(bucket, stack_id, request_type, notification_configuration, old):\n  def get_id(n):\n    n['Id'] = ''\n    strToHash=json.dumps(n, sort_keys=True).replace('\"Name\": \"prefix\"', '\"Name\": \"Prefix\"').replace('\"Name\": \"suffix\"', '\"Name\": \"Suffix\"')\n    return f\"{stack_id}-{hash(strToHash)}\"\n  def with_id(n):\n    n['Id'] = get_id(n)\n    return n\n\n  external_notifications = {}\n  existing_notifications = s3.get_bucket_notification_configuration(Bucket=bucket)\n  for t in CONFIGURATION_TYPES:\n    if request_type == 'Update':\n        old_incoming_ids = [get_id(n) for n in old.get(t, [])]\n        external_notifications[t] = [n for n in existing_notifications.get(t, []) if not get_id(n) in old_incoming_ids]      \n    elif request_type == 'Delete':\n        external_notifications[t] = [n for n in existing_notifications.get(t, []) if not n['Id'].startswith(f\"{stack_id}-\")]\n    elif request_type == 'Create':\n        external_notifications[t] = [n for n in existing_notifications.get(t, [])]\n  if EVENTBRIDGE_CONFIGURATION in existing_notifications:\n    external_notifications[EVENTBRIDGE_CONFIGURATION] = existing_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  if request_type == 'Delete':\n    return external_notifications\n\n  notifications = {}\n  for t in CONFIGURATION_TYPES:\n    external = external_notifications.get(t, [])\n    incoming = [with_id(n) for n in notification_configuration.get(t, [])]\n    notifications[t] = external + incoming\n\n  if EVENTBRIDGE_CONFIGURATION in notification_configuration:\n    notifications[EVENTBRIDGE_CONFIGURATION] = notification_configuration[EVENTBRIDGE_CONFIGURATION]\n  elif EVENTBRIDGE_CONFIGURATION in external_notifications:\n    notifications[EVENTBRIDGE_CONFIGURATION] = external_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  return notifications\n\ndef submit_response(event: dict, context, response_status: str, error_message: str):\n  response_body = json.dumps(\n    {\n      \"Status\": response_status,\n      \"Reason\": f\"{error_message}See the details in CloudWatch Log Stream: {context.log_stream_name}\",\n      \"PhysicalResourceId\": event.get(\"PhysicalResourceId\") or event[\"LogicalResourceId\"],\n      \"StackId\": event[\"StackId\"],\n      \"RequestId\": event[\"RequestId\"],\n      \"LogicalResourceId\": event[\"LogicalResourceId\"],\n      \"NoEcho\": False,\n    }\n  ).encode(\"utf-8\")\n  headers = {\"content-type\": \"\", \"content-length\": str(len(response_body))}\n  try:\n    req = urllib.request.Request(url=event[\"ResponseURL\"], headers=headers, data=response_body, method=\"PUT\")\n    with urllib.request.urlopen(req) as response:\n      print(response.read().decode(\"utf-8\"))\n    print(\"Status code: \" + response.reason)\n  except Exception as e:\n      print(\"send(..) failed executing request.urlopen(..): \" + str(e))"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 300
+   },
+   "DependsOn": [
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource"
    }
   },
   "HttpApiF5A9A8A7": {
@@ -468,6 +1672,137 @@
    },
    "Metadata": {
     "aws:cdk:path": "AiWebStack/HttpApi/POST--chat/Resource"
+   }
+  },
+  "HttpApiPOSTuploadFileUploadIntegration14367714": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "FileUpload8EAE93BA",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/HttpApi/POST--upload/FileUploadIntegration/Resource"
+   }
+  },
+  "HttpApiPOSTuploadFileUploadIntegrationPermission6D5B5D63": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "FileUpload8EAE93BA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-2:677276086250:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/upload"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/HttpApi/POST--upload/FileUploadIntegration-Permission"
+   }
+  },
+  "HttpApiPOSTuploadC45D23DF": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "NONE",
+    "RouteKey": "POST /upload",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiPOSTuploadFileUploadIntegration14367714"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/HttpApi/POST--upload/Resource"
+   }
+  },
+  "HttpApiOPTIONSuploadFileUploadIntegrationPermissionCA9015A1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "FileUpload8EAE93BA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-2:677276086250:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/upload"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/HttpApi/OPTIONS--upload/FileUploadIntegration-Permission"
+   }
+  },
+  "HttpApiOPTIONSupload119F306B": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "NONE",
+    "RouteKey": "OPTIONS /upload",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiPOSTuploadFileUploadIntegration14367714"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AiWebStack/HttpApi/OPTIONS--upload/Resource"
    }
   },
   "SiteBucket397A1860": {
@@ -718,7 +2053,7 @@
      "cdk-hnb659fds-assets-677276086250-us-east-2"
     ],
     "SourceObjectKeys": [
-     "7a358d2efafdd24fb4a94fe9814acc7951a09f19066315abb0da29e62c37f67b.zip"
+     "250dfd6abf981693aedab7f76699fd69d5aa47bd28f85ad9e7587650e2ab052e.zip"
     ],
     "DestinationBucketName": {
      "Ref": "SiteBucket397A1860"
@@ -910,7 +2245,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/3VR22rDMAz9lr67Xi8M9tqmlBXGWlLYa3EdNah17GDJDSHk34edXrbBns45snQkSzM5fZ3LyUg1NNbFZWzwKLs9K30ROZALXoNQDR06mstuGfQFWGQne2MD7JxB3T7DNz2IpSLohVHVsVAH6wo4k/xMsA5WMzorUFWyy52BaJHw6TiwXtD80CkiYJKLCKKA2ri2AstyaLR6BO7tZJed7KNLNANfIdFNfagW/Bf4pPdoSwPsnvl30gtVY6kYGtVeZ7J7Z64XNUaHCFHuWZVp+IHEUO4CD2xjGUqv7jP8kSmvF9q4UJy8syy7FRJ7PIaUsvVYol1oDUSbAiwjp71ksWAdC/7L+GnT9yILxK563DS2fvBfTzvvrliAj4cTadfxV2jL+xFN3NtBNaQNykVDmcG0yui5DVwH7kU8tDzTy3U2kdM3ORudCXHsg2WsQOYDfgMFJhg0fAIAAA=="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/3VSTWvjMBD9Lb0r2tal0KubbLuBpTXJkmuQ5Yk7iSwZzSgmGP/3RbLXCYE9vQ+eRqMZZfLp5Vk+PqiOFro6LQyWst+y0iexAXLBaxCqo30POpP9rtViebC7YimKUBrU21Ba4Ohd2cYFhj+qNHD1r15O5DQqRmfncCQ/10WET8UfiqFTF1F4PCuGa+G1ZfAW5sDYyaRyZqW/G7AstqCDR758eBfa1MOtMQjXgiVQXn8T+DNqkP3KNQpTQyMbhFFNWSnZb9HWBtjZ92B16nomy4O95QX4Bokm9VtdwO/ARz0IVI3sC2dQp7YntnHjjCIOgp73vSICJplHEBW0xl3ik+Rb0Cfg1WzEtOxH900RiJHGYhMb4Xrlrf73ur11FRxJfiaY36JarMehnjPZ/2Ju8xZjjQhRblnV43ITida4x8jilmo/L/hOptwgtHGhOnhnWfYrJPZYhhT58lijzbUGonUFlpFT+8t44D0e+F/itswwCB2IXbP30ycmmXe0TN78r+/lwc48LSC+Dm19lyu8O2MFPo19mqOJy96rjrTBdJHBtP9Y8ytwG3gQcdbySD/O2aN8epXZw5EQFz5YxgbkZsS/QaH2PI8DAAA="
    },
    "Metadata": {
     "aws:cdk:path": "AiWebStack/CDKMetadata/Default"
@@ -949,6 +2284,17 @@
    "Value": {
     "Ref": "DocumentsBucket9EC9DEB9"
    }
+  },
+  "OpenSearchEndpoint": {
+   "Value": {
+    "Fn::GetAtt": [
+     "RAGDomain527EB988",
+     "DomainEndpoint"
+    ]
+   }
+  },
+  "OpenSearchIndex": {
+   "Value": "documents"
   }
  },
  "Parameters": {

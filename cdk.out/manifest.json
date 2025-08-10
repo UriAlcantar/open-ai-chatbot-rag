@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::677276086250:role/cdk-hnb659fds-deploy-role-677276086250-us-east-2",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::677276086250:role/cdk-hnb659fds-cfn-exec-role-677276086250-us-east-2",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-677276086250-us-east-2/76688af0c928b1d10a48d13f77264a1f3bf9506941cc37f121fb98965799fa21.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-677276086250-us-east-2/8846093a5c8b743135a29b4db98adfc56b6daa1759d42ca20b4fb405a686b799.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -34,6 +34,120 @@
         "AiWebStack.assets"
       ],
       "metadata": {
+        "/AiWebStack/RAGVPC/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCB5C21593"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PublicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPublicSubnet1Subnet45F7C19A"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PublicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPublicSubnet1RouteTableA4838285"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PublicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPublicSubnet1RouteTableAssociationDFD5559A"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PublicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPublicSubnet1DefaultRoute0BFEC12E"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PublicSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPublicSubnet1EIP65D7E8D8"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PublicSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPublicSubnet1NATGateway695A0D74"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PrivateSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPrivateSubnet1SubnetE18EC96A"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PrivateSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPrivateSubnet1RouteTableCE09D877"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PrivateSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPrivateSubnet1RouteTableAssociation2795986E"
+          }
+        ],
+        "/AiWebStack/RAGVPC/PrivateSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCPrivateSubnet1DefaultRoute6B5B1169"
+          }
+        ],
+        "/AiWebStack/RAGVPC/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCIGW32511347"
+          }
+        ],
+        "/AiWebStack/RAGVPC/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGVPCVPCGW806E27EC"
+          }
+        ],
+        "/AiWebStack/OpenSearchSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OpenSearchSecurityGroup5212DDD0"
+          }
+        ],
+        "/AiWebStack/RAGDomain/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGDomain527EB988"
+          }
+        ],
+        "/AiWebStack/RAGDomain/AccessPolicy/Resource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGDomainAccessPolicy0F9EC2FC"
+          }
+        ],
+        "/AiWebStack/RAGDomain/AccessPolicy/CustomResourcePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RAGDomainAccessPolicyCustomResourcePolicy9E01FF89"
+          }
+        ],
+        "/AiWebStack/AWS679f53fac002430cb0da5b7982bd2287/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2"
+          }
+        ],
+        "/AiWebStack/AWS679f53fac002430cb0da5b7982bd2287/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWS679f53fac002430cb0da5b7982bd22872D164C4C"
+          }
+        ],
         "/AiWebStack/DocumentsBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -52,6 +166,18 @@
             "data": "DocumentsBucketAutoDeleteObjectsCustomResourceFE3123FC"
           }
         ],
+        "/AiWebStack/DocumentsBucket/Notifications/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketNotifications871115F2"
+          }
+        ],
+        "/AiWebStack/DocumentsBucket/AllowBucketNotificationsToAiWebStackDocumentProcessorBEFF2468": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketAllowBucketNotificationsToAiWebStackDocumentProcessorBEFF24685DDCEE58"
+          }
+        ],
         "/AiWebStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
           {
             "type": "aws:cdk:logicalId",
@@ -62,6 +188,54 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/AiWebStack/DocumentProcessor/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentProcessorServiceRole842FAC4B"
+          }
+        ],
+        "/AiWebStack/DocumentProcessor/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentProcessorServiceRoleDefaultPolicyC0CEFF68"
+          }
+        ],
+        "/AiWebStack/DocumentProcessor/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentProcessorSecurityGroupFF597A56"
+          }
+        ],
+        "/AiWebStack/DocumentProcessor/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentProcessor3D49A083"
+          }
+        ],
+        "/AiWebStack/FileUpload/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FileUploadServiceRole7F805DD3"
+          }
+        ],
+        "/AiWebStack/FileUpload/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FileUploadServiceRoleDefaultPolicy78D9700B"
+          }
+        ],
+        "/AiWebStack/FileUpload/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FileUploadSecurityGroup885DE697"
+          }
+        ],
+        "/AiWebStack/FileUpload/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FileUpload8EAE93BA"
           }
         ],
         "/AiWebStack/ChatHandler/ServiceRole/Resource": [
@@ -76,10 +250,34 @@
             "data": "ChatHandlerServiceRoleDefaultPolicy7E79112C"
           }
         ],
+        "/AiWebStack/ChatHandler/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ChatHandlerSecurityGroupCA7C1A3B"
+          }
+        ],
         "/AiWebStack/ChatHandler/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "ChatHandler6667856F"
+          }
+        ],
+        "/AiWebStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+          }
+        ],
+        "/AiWebStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36"
+          }
+        ],
+        "/AiWebStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691"
           }
         ],
         "/AiWebStack/HttpApi/Resource": [
@@ -110,6 +308,36 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "HttpApiPOSTchat1EBFAE30"
+          }
+        ],
+        "/AiWebStack/HttpApi/POST--upload/FileUploadIntegration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiPOSTuploadFileUploadIntegration14367714"
+          }
+        ],
+        "/AiWebStack/HttpApi/POST--upload/FileUploadIntegration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiPOSTuploadFileUploadIntegrationPermission6D5B5D63"
+          }
+        ],
+        "/AiWebStack/HttpApi/POST--upload/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiPOSTuploadC45D23DF"
+          }
+        ],
+        "/AiWebStack/HttpApi/OPTIONS--upload/FileUploadIntegration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiOPTIONSuploadFileUploadIntegrationPermissionCA9015A1"
+          }
+        ],
+        "/AiWebStack/HttpApi/OPTIONS--upload/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiOPTIONSupload119F306B"
           }
         ],
         "/AiWebStack/SiteBucket/Resource": [
@@ -194,6 +422,18 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "DocumentsBucketName"
+          }
+        ],
+        "/AiWebStack/OpenSearchEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OpenSearchEndpoint"
+          }
+        ],
+        "/AiWebStack/OpenSearchIndex": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OpenSearchIndex"
           }
         ],
         "/AiWebStack/CDKMetadata/Default": [

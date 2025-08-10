@@ -18,6 +18,7 @@
     "list-documents": "node scripts/list-documents.js",
     "setup-weather-api": "node scripts/setup-weather-api.js",
     "test-weather": "node scripts/test-weather-api.js",
+    "process-existing-documents": "node scripts/process-existing-documents.js",
     "deploy:rag": "npm run deploy:secure && echo 'Deploy completado. Ahora ejecuta: npm run upload-documents <bucket-name>'",
     "deploy:api": "cdk deploy ApiStack --app 'npx ts-node bin/app.ts'",
     "deploy:frontend": "cdk deploy FrontendStack --app 'npx ts-node bin/app.ts'",

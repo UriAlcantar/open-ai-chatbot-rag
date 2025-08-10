@@ -1,7 +1,7 @@
-import type { S3Event } from 'aws-lambda';
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import OpenAI from 'openai';
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import OpenAI from 'openai';
 
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
 const secretsClient = new SecretsManagerClient({ region: process.env.AWS_REGION });
@@ -84,7 +84,7 @@ async function createOpenSearchIndex(): Promise<void> {
           },
           embedding: {
             type: 'dense_vector',
-            dims: 1536, // OpenAI text-embedding-3-small dimension
+            dims: 1536,
             index: true,
             similarity: 'cosine'
           },
@@ -96,6 +96,12 @@ async function createOpenSearchIndex(): Promise<void> {
           },
           timestamp: {
             type: 'date'
+          },
+          user_id: {
+            type: 'keyword'
+          },
+          file_name: {
+            type: 'keyword'
           }
         }
       },
@@ -125,7 +131,14 @@ async function createOpenSearchIndex(): Promise<void> {
   }
 }
 
-async function indexDocument(chunk: string, embedding: number[], source: string, chunkIndex: number): Promise<void> {
+async function indexDocument(
+  chunk: string, 
+  embedding: number[], 
+  source: string, 
+  chunkIndex: number, 
+  userId: string,
+  fileName: string
+): Promise<void> {
   const opensearchEndpoint = process.env.OPENSEARCH_ENDPOINT;
   const opensearchIndex = process.env.OPENSEARCH_INDEX || 'documents';
   
@@ -141,9 +154,11 @@ async function indexDocument(chunk: string, embedding: number[], source: string,
       source: source,
       chunk_index: chunkIndex,
       timestamp: new Date().toISOString(),
+      user_id: userId,
+      file_name: fileName
     };
 
-    const indexUrl = `https://${opensearchEndpoint}/${opensearchIndex}/_doc/${source}-${chunkIndex}`;
+    const indexUrl = `https://${opensearchEndpoint}/${opensearchIndex}/_doc/${source.replace(/\//g, '-')}-${chunkIndex}`;
     
     const response = await fetch(indexUrl, {
       method: 'PUT',
@@ -163,53 +178,120 @@ async function indexDocument(chunk: string, embedding: number[], source: string,
   }
 }
 
-export const handler = async (event: S3Event): Promise<void> => {
+async function saveToS3(content: string, fileName: string, userId: string): Promise<string> {
+  const bucketName = process.env.DOCUMENTS_BUCKET;
+  if (!bucketName) {
+    throw new Error('DOCUMENTS_BUCKET environment variable not set');
+  }
+
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const key = `documents/${timestamp}-${fileName}`;
+
+  const command = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+    Body: content,
+    ContentType: 'text/plain',
+    Metadata: {
+      'user-id': userId,
+      'file-name': fileName,
+      'upload-time': timestamp
+    }
+  });
+
+  await s3Client.send(command);
+  return key;
+}
+
+function resp(statusCode: number, body: any): APIGatewayProxyResultV2 {
+  return { 
+    statusCode, 
+    headers: { 
+      'content-type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    }, 
+    body: JSON.stringify(body) 
+  };
+}
+
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+  // Manejar CORS preflight
+  if (event.requestContext.http.method === 'OPTIONS') {
+    return resp(200, { message: 'OK' });
+  }
+
+  if (event.requestContext.http.method !== 'POST') {
+    return resp(405, { error: 'Method not allowed' });
+  }
+
   try {
+    const body = JSON.parse(event.body || '{}');
+    const { content, fileName, userId } = body;
+
+    if (!content || !fileName || !userId) {
+      return resp(400, { 
+        error: 'Missing required fields: content, fileName, userId' 
+      });
+    }
+
+    console.log(`Processing file upload: ${fileName} for user: ${userId}`);
+
     // Crear el índice si no existe
     await createOpenSearchIndex();
-    
+
     const openai = await getOpenAIClient();
-    
-    for (const record of event.Records) {
-      const bucket = record.s3.bucket.name;
-      const key = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' '));
+
+    // Guardar en S3
+    const s3Key = await saveToS3(content, fileName, userId);
+    console.log(`File saved to S3: ${s3Key}`);
+
+    // Dividir en chunks
+    const chunks = await chunkText(content);
+    console.log(`Document split into ${chunks.length} chunks`);
+
+    let processedChunks = 0;
+    let totalChunks = chunks.length;
+
+    // Procesar cada chunk
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
       
-      console.log(`Processing document: ${bucket}/${key}`);
-      
-      // Obtener el documento de S3
-      const getObjectCommand = new GetObjectCommand({ Bucket: bucket, Key: key });
-      const s3Response = await s3Client.send(getObjectCommand);
-      
-      if (!s3Response.Body) {
-        console.error('No body found in S3 object');
-        continue;
-      }
-      
-      const documentText = await s3Response.Body.transformToString();
-      
-      // Dividir en chunks
-      const chunks = await chunkText(documentText);
-      
-      console.log(`Processing ${chunks.length} chunks from ${key}`);
-      
-      // Procesar cada chunk
-      for (let i = 0; i < chunks.length; i++) {
-        const chunk = chunks[i];
-        
+      try {
         // Crear embedding
         const embedding = await createEmbedding(chunk, openai);
         
         // Indexar en OpenSearch
-        await indexDocument(chunk, embedding, key, i);
+        await indexDocument(chunk, embedding, s3Key, i, userId, fileName);
+        
+        processedChunks++;
         
         // Pequeña pausa para evitar rate limiting
         await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (error) {
+        console.error(`Error processing chunk ${i}:`, error);
       }
-      
-      console.log(`Completed processing document: ${key}`);
     }
-  } catch (error) {
-    console.error('Error processing document:', error);
-    throw error;
+
+    console.log(`Completed processing file: ${fileName}`);
+    console.log(`Processed ${processedChunks}/${totalChunks} chunks`);
+
+    return resp(200, {
+      success: true,
+      message: 'File uploaded and processed successfully',
+      fileName: fileName,
+      s3Key: s3Key,
+      chunksProcessed: processedChunks,
+      totalChunks: totalChunks,
+      userId: userId
+    });
+
+  } catch (error: any) {
+    console.error('Error processing file upload:', error);
+    return resp(500, { 
+      error: 'Internal server error',
+      message: error.message || 'Unknown error occurred'
+    });
   }
 };
